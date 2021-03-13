@@ -1,6 +1,14 @@
+library(ggplot2)
 
-df = data_exped2_factorized %>% select(-5:-38)
 
-write.csv(df, "C:\\Users\\Janus\\Desktop\\UNI LENC\\WS20_21\\Exped 2\\Exped-fucks\\df_long.csv", row.names=FALSE)
+df <- data_exped2_factorized2
+df[df == "9999"] <- NA
 
-data[data == "9999"] <- NA
+str(df)
+
+#ggplot(data= df, aes(x = date , y = open_buds))+
+  #geom_line(aes(df$tree_id == "2", color = "red"))?lm
+par(c(1,1,1,1))
+
+plot(df$open_buds ~ df$date) 
+
