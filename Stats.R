@@ -1,0 +1,64 @@
+####The influence of soil temperature on bud burst####
+####analysing and visualising treatment####
+#read soil temperature dat
+setwd('C:\\Users\\Frederik\\Documents\\Studiumbewerbung\\Greifswald\\Experimental Plant Ecology\\Ecological Exp')
+library(readxl)
+library(dplyr)
+dat <- read_excel('soiltempSummary.xlsx')
+
+#data check
+str(dat)
+summary(dat)
+
+#subset data by temperature
+dat0C <- dat %>% slice(1:5439)
+dat6C <- dat %>% slice(5440:10878)
+dat12C <- dat %>% slice(10879:16317)
+datISO  <- dat%>% slice(16318:34447)
+datNO <- dat%>% slice(34448:52577)
+
+#plot soil temperature: boxplot
+?boxplot
+boxplot(Soiltemp ~ Sensor, data=dat0C, ylab = 'Temperature (°C)')
+boxplot(Soiltemp ~ Sensor, data=dat6C, ylab = 'Temperature (°C)')
+boxplot(Soiltemp ~ Sensor, data=dat12C, ylab = 'Temperature (°C)')
+boxplot(Soiltemp ~ Sensor, data=datISO, ylab = 'Temperature (°C)')
+boxplot(Soiltemp ~ Sensor, data=datNO, ylab = 'Temperature (°C)')
+
+#summerize all in one plot 0C, 6C, 12C, Iso, NoISO
+boxplot(Soiltemp~Treatment, data = datsum, ylab = 'Temperature (°C)')
+
+#signifant difference between groups?
+library(multcomp)
+library(sciplot)
+library(lmerTest)
+?lmer
+mod <- lmer(Soiltemp ~ Treatment + (1|Sensor), data =datsum)
+#check diagnostics
+par(mfrow = c(1,2))
+plot(fitted(mod), resid(mod), xlab = 'fitted', ylab = 'residuals')
+qqnorm(resid(mod), main = "")
+qqline(resid(mod), main = "", col = 2)
+#transformation, because parametric assumtions are not satisfied
+t <- lmer(rank(Soiltemp) ~ Treatment + (1|Sensor), data =datsum)
+#testing the model
+anova(t)
+# anova implies a significance
+# posthoc testing: pairwise testing with Tukey
+phtuk <- glht(t, linfct = mcp(Treatment = 'Tukey'))
+?glht
+summary(phtuk)
+
+####time series of bud burst####
+buddat <- read.csv2('budburst-timeseries.csv')
+buddat[buddat == 9999] <- NA
+plot(buddat$tree1 ~ buddat$post.treat..Days, type = 'l', ylab = 'open buds', xlab = 'days post treatment')
+lines(buddat$post.treat..Days, buddat$tree2, col = 'blue')
+lines(buddat$post.treat..Days, buddat$tree3, col = 'red')
+lines(buddat$post.treat..Days, buddat$tree4, col = 'orange')
+lines(buddat$post.treat..Days, buddat$tree5, col = 'darkblue')
+lines(buddat$post.treat..Days, buddat$tree6, col = '')
+
+budnew <- read_excel('bud-burstnew.xlsx')
+budnew[budnew == 9999] <- NA
+plot(budnew$`open buds` ~ budnew$`post treat. Days`, type = 'l')
