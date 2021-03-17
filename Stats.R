@@ -80,12 +80,19 @@ budnew[budnew == 9999] <- NA
 budnew$relative_open_buds[budnew$relative_open_buds > 100] <- NA
 str(budnew)
 budnew$tree <- as.factor(budnew$tree)
+budnew$treatment <- as.factor (budnew$treatment)
+
+# subset the treatments
+treatment_0 <- budnew %>% slice(1:396)
+treatment_6 <- budnew %>% slice(397:792)
+treatment_12 <- budnew %>% slice(793:1188)
 
 #plot(budnew$`open buds`~budnew$`post treat. Days`, type ='l')
 library(ggplot2)
+theme_set(theme_bw()) # nices theme gibt lecker black and white graphs
 qplot(x=`post treat. Days`, y=`open buds`, 
       data=budnew, 
-      colour=tree, 
+      colour=tree, #eventually treatment
       xlab = 'days post treatment',
       ylab = 'open buds') +
   geom_line()
@@ -95,8 +102,8 @@ qplot(x=`post treat. Days`, y=`open buds`,
 library(ggplot2)
 qplot(x=`post treat. Days`, y=`relative_open_buds`, 
       data=budnew, 
-      colour=tree, 
+      colour=tree, #eventually treatment
       xlab = 'days post treatment',
-      ylab = 'open buds') +
-  geom_line()
+      ylab = 'open buds [%]') +
+  geom_line(orientation = "y")
 
