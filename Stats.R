@@ -72,19 +72,7 @@ for (i in 3:58){
   lines(buddat$post.treat..Days, buddat[,i], col = cl[i])
 }
 
-#with data ordered by column
-budnew <- read_excel('bud-burstnew.xlsx')
-budnew[budnew == 9999] <- NA
-str(budnew)
-budnew$tree <- as.factor(budnew$tree)
-#plot(budnew$`open buds`~budnew$`post treat. Days`, type ='l')
-library(ggplot2)
-qplot(x=`post treat. Days`, y=`open buds`, 
-      data=budnew, 
-      colour=tree, 
-      xlab = 'days post treatment',
-      ylab = 'open buds') +
-  geom_line()
+#### PLots for Bud Burst
 
 #with data ordered by column
 budnew <- read_excel('bud-burstnew.xlsx')
@@ -93,7 +81,6 @@ budnew$relative_open_buds[budnew$relative_open_buds > 100] <- NA
 str(budnew)
 budnew$tree <- as.factor(budnew$tree)
 
-
 #plot(budnew$`open buds`~budnew$`post treat. Days`, type ='l')
 library(ggplot2)
 qplot(x=`post treat. Days`, y=`open buds`, 
@@ -103,7 +90,8 @@ qplot(x=`post treat. Days`, y=`open buds`,
       ylab = 'open buds') +
   geom_line()
 
-#plot(budnew$`open buds`~budnew$`post treat. Days`, type ='l')
+
+#plot(budnew$`relative_open_buds`~budnew$`post treat. Days`, type ='l')
 library(ggplot2)
 qplot(x=`post treat. Days`, y=`relative_open_buds`, 
       data=budnew, 
