@@ -75,4 +75,4 @@ qplot(x=`post treat. Days`, y=`open buds`,
       ylab = 'open buds') +
   geom_line()
 
-?qplot
+
