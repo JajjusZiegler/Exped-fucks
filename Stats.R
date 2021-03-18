@@ -75,4 +75,37 @@ qplot(x=`post treat. Days`, y=`open buds`,
       ylab = 'open buds') +
   geom_line()
 
+#plot data ordered by column and group by treatment
+#subset to only climate chamber trees
+dattreat <- budnew %>% slice(1:1188)
+dattreat$treatment <- as.factor(dattreat$treatment)
+str(dattreat)
+theme_set(theme_bw())
+ggplot(dattreat, aes(x =`post treat. Days`, y =`open buds`,
+                     group = interaction(tree, treatment),
+                     colour = treatment)) +
+  geom_line()
 
+#signifant difference between treatments?
+library(multcomp)
+library(sciplot)
+library(lmerTest)
+?lmer
+mod1 <- lmer(`open buds` ~ treatment + (1|tree), data =dattreat)
+#check diagnostics
+par(mfrow = c(1,2))
+plot(fitted(mod1), resid(mod1), xlab = 'fitted', ylab = 'residuals')
+qqnorm(resid(mod1), main = "")
+qqline(resid(mod1), main = "", col = 2)
+#transformation, because parametric assumtions are not satisfied
+t <- lmer(rank(`open buds`) ~ treatment + (1|tree), data =dattreat)
+plot(fitted(t), resid(t), xlab = 'fitted', ylab = 'residuals')
+qqnorm(resid(t), main = "")
+qqline(resid(t), main = "", col = 2)
+#testing the model
+anova(t)
+# anova implies a significance
+# posthoc testing: pairwise testing with Tukey
+phtuk <- glht(t, linfct = mcp(treatment = 'Tukey'))
+?glht
+summary(phtuk)
