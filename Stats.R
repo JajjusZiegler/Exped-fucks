@@ -27,7 +27,7 @@ boxplot(Soiltemp ~ Sensor, data=datISO, ylab = 'Temperature (?C)')
 boxplot(Soiltemp ~ Sensor, data=datNO, ylab = 'Temperature (?C)')
 
 #summerize all in one plot 0C, 6C, 12C, Iso, NoISO
-boxplot(Soiltemp~Treatment, data = datsum, ylab = 'Temperature (?C)')
+boxplot(Soiltemp~Treatment, data = datsum, ylab = 'Temperature (?C)') # ????datsum?????
 
 boxplot(Soiltemp ~ Sensor, data=dat0C, ylab = 'Temperature (°C)')
 boxplot(Soiltemp ~ Sensor, data=dat6C, ylab = 'Temperature (°C)')
@@ -100,10 +100,11 @@ qplot(x=`post treat. Days`, y=`open buds`,
 
 #plot(budnew$`relative_open_buds`~budnew$`post treat. Days`, type ='l')
 library(ggplot2)
-qplot(x=`post treat. Days`, y=`relative_open_buds`, 
+qplot(x=`post treat. Days`, y=`relative_open_buds`,
+      geom = "line",
       data=budnew, 
-      colour=tree, #eventually treatment
+      colour = tree, #eventually treatment
       xlab = 'days post treatment',
       ylab = 'open buds [%]') +
-  geom_line(orientation = "y")
+  geom_line(aes (colour = tree))
 
